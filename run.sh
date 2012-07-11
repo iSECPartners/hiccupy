@@ -1,0 +1,1 @@
+java -Xmx1024m -classpath /usr/local/share/burp/burpsuite_pro_v1.4.10.jar:/usr/local/Cellar/jython/2.5.2/libexec/jython.jar:hiccupy.jar -Dpython.path=$PWD:$PWD/lib:$PWD/lib/plugins:$PWD/lib/plugins/plugins-enabled burp.StartBurp
