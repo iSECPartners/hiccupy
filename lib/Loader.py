@@ -33,7 +33,7 @@ class Loader:
       enabledMods[plugin] = __import__(mod)
       try:
         enabledPlugins[plugin] = getattr(enabledMods[plugin], mod)(self.config)
-      except AttributeError, e:                                              
+      except AttributeError, e:
 	print "[%s] Failed to load plugin: %s => %s" % (self.__class__.__name__, plugin, e) 
     return enabledPlugins, enabledMods
 

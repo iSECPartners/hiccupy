@@ -31,6 +31,11 @@ class BurpExtender(IBurpExtender):
 		      remoteHost, remotePort, serviceIsHttps, httpMethod,
 		      path, resourceType, statusCode, responseContentType,
 		      message, interceptAction)
+    return message
+
+  def processHttpMessage(self, toolName, messageIsRequest, message):
+    if toolName == "intruder" and messageIsRequest:
+      print "[%s] %s" % (toolName, message.getRequest())
 
 # DEBUG to drop into interactive shell
 #    message = message.tostring()
@@ -39,4 +44,3 @@ class BurpExtender(IBurpExtender):
 #    msg = "[%s] hiccupy interactive python session" % ("REQUST" if messageIsRequest else "RESPONSE")
 #    c.interact(msg)
 
-    return message
