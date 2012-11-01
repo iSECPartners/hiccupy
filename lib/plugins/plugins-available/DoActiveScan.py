@@ -1,22 +1,28 @@
 from Plugin import Plugin
-from re import compile
 
 class DoActiveScan(Plugin):
   """
   DoActiveScan just basically sends all in-scope requests to the active scanner.
-  Calling doActiveScan, a IScanQueueItem
+  Calling doActiveScan returns an IScanQueueItem that can be used to inspect the
+  scanner results.
   """
 
   def __init__(self, config):
-	self.http_sep = compile('\r\n\r\n')
 	self.config = config
+	self.scanQueueItems = []
 
   def processProxyRequest(self, msgRef, messageIsRequest, remoteHost,
 		  remotePort, serviceIsHttps, httpMethod, path, resourceType,
 		  statusCode, responseContentType, message, interceptAction):
-	self.config['callbacks'].doActiveScan(remoteHost, remotePort,
-			serviceIsHttps, message)
-	print "Added request to active scanner"
+	# keep a reference to the returned IScanQueueItem
+	self.scanQueueItems.append(self.config['callbacks'].doActiveScan(remoteHost,
+		remotePort, serviceIsHttps, message))
+	for item in self.scanQueueItems:
+	  print "Percentage complete: %s" % item.getPercentageComplete()
+	  if item.getPercentageComplete() == '100':
+	    for issue in item.getIssues():
+	      print "\tUrl: %s" % issue.getUrl()
+	      print "\tIssue: %s" % issue.getIssueName()
 
   def processProxyResponse(self, msgRef, messageIsRequest, remoteHost,
 		  remotePort, serviceIsHttps, httpMethod, path, resourceType,
